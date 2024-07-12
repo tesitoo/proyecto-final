@@ -1,0 +1,83 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url("/img/fondo.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    font-family: Arial, sans-serif; 
+    color: #969696; /* #333; */
+}
+
+.navbar {
+    background-color: #6c757d; 
+}
+
+.navbar-brand {
+    color: #fff;
+    font-weight: bold;
+}
+
+.navbar-nav .nav-link {
+    color: #fff; 
+    margin-right: 10px; 
+}
+
+.navbar-nav .nav-link:hover {
+    color: #f8f9fa; 
+}
+
+.navbar-toggler {
+    border-color: #fff; 
+}
+
+.explicacion-nosotros {
+    background-color: rgba(19, 18, 18, 0.479); 
+    padding: 50px;
+    margin-top: 100px; 
+    border-radius: 10px; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+}
+
+.explicacion-nosotros h1 {
+    color: #969696; /* #333; */ 
+    margin-bottom: 20px; 
+}
+
+.explicacion-nosotros p {
+    margin-bottom: 20px; 
+}
+
+.integrante-card {
+    margin-top: 20px;
+}
+
+.integrante-card .card-img-top {
+    height: 300px; 
+    object-fit: cover; 
+}
+
+.integrante-card .card-body {
+    text-align: center; 
+}
+
+.integrante-card .card-title {
+    font-size: 1.2rem; 
+    font-weight: bold; 
+}
+
+footer {
+    margin-top: 20px; 
+    background-color: #f8f9fa; 
+    color: #333; 
+    font-size: 14px; 
+    text-align: center; 
+    padding: 10px 0; 
+}
+
+footer a {
+    color: #969696; /* #333; */ 
+}
+
+#footer a:hover {
+    text-decoration: none;
+}

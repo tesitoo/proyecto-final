@@ -1,0 +1,42 @@
+.usuario-admin {
+    width: 75rem;
+    margin: 100px auto;
+    background-color: rgb(43, 48, 53);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.usuario-admin h1, .usuario-admin h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.usuario-admin form {
+    margin-bottom: 20px;
+}
+
+.usuario-admin .form-group {
+    margin-bottom: 15px;
+}
+
+/* .usuario-admin table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.usuario-admin table th, .usuario-admin table td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+} */
+
+/* .usuario-admin table th {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.usuario-admin table td {
+    background-color: #f8f9fa;
+} */

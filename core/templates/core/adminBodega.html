@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static "core/css/AdBodega.css"%}"> 
+    <link rel="stylesheet" href="{% static "core/css/style.css"%}"> 
+    <title>Mantenedor de Bodega</title>
+</head>
+<body>
+    {% include "./navbar.html" %}
+    <hr>
+    <div class="bodega-container">
+        <h1>Mantenedor de Bodega</h1>
+        <form id="mantenedorBodegaForm" method="post" action="{% url 'actualizar_producto' %}" autocomplete="off">
+            {% csrf_token %}
+            <div class="bodega-form-group">
+                <label for="bodega_id">ID</label>
+                <input type="text" class="bodega-form-control" id="bodega_id" name="bodega_id" readonly>
+            </div>
+            <div class="bodega-form-group">
+                <label for="bodega_nombre">Nombre</label>
+                <input type="text" class="bodega-form-control" id="bodega_nombre" name="bodega_nombre" readonly>
+            </div>
+            <div class="bodega-form-group">
+                <label for="bodega_stock">Stock actual</label>
+                <input type="number" class="bodega-form-control" id="bodega_stock" name="bodega_stock" readonly>
+            </div>
+            <div class="bodega-form-group">
+                <label for="bodega_añadir">Stock a añadir</label>
+                <input type="number" class="bodega-form-control" id="bodega_añadir" name="bodega_añadir" disabled>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="bodega-btn btn btn-primary mx-2" disabled>Aplicar cambios</button>
+                <button type="button" class="btn btn-danger mx-2" id="limpiarDatos" style="display: none;">Limpiar</button>
+            </div>
+        </form>
+
+        <table class="bodega-table table mt-4">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Categoría</th>
+                    <th>Nombre</th>
+                    <th>Cantidad</th>
+                    <th>Foto</th>
+                    <th>Opciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos %}
+                    <tr>
+                        <td class="producto-id">{{producto.id}}</td>
+                        <td class="producto-categoria">{% if not producto.categoria %}-{% else %}{{producto.categoria}}{% endif %}</td>
+                        <td class="producto-nombre">{{producto.nombre}}</td>
+                        <td class="producto-stock">{{producto.stock}}</td>
+                        <td><img src="media/{{producto.imagen}}" style="width: 64px; height: 64px;"></img></td>
+                        <td>
+                            <button type="button" class="bodega-btn btn btn-warning" data-id="{{producto.id}}">Cargar datos</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% include "./footer.html" %}
+    <hr>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="{% static "core/js/Vbodega.js" %}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const btnsCargarDatos = document.querySelectorAll(".bodega-btn")
+            const campoID = document.getElementById("bodega_id")
+            const campoNombre = document.getElementById("bodega_nombre")
+            const campoStockActual = document.getElementById("bodega_stock")
+            const campoStockAñadir = document.getElementById("bodega_añadir")
+            const btnAplicarCambios = document.querySelector(".bodega-btn")
+            const btnLimpiarDatos = document.getElementById("limpiarDatos")
+            
+            btnsCargarDatos.forEach(boton => {
+                boton.addEventListener("click", function() {
+                    const idProducto = this.getAttribute("data-id")
+                    const nombreProducto = this.closest("tr").querySelector(".producto-nombre").textContent
+                    const stockProducto = this.closest("tr").querySelector(".producto-stock").textContent
+                    
+                    campoNombre.value = nombreProducto
+                    campoID.value = idProducto
+                    campoStockActual.value = stockProducto
+                    btnLimpiarDatos.style.display = "inline-block"
+                    campoStockAñadir.disabled = false
+                })
+            })
+
+            campoStockAñadir.addEventListener("change", function() {
+                btnAplicarCambios.disabled = isNaN(parseInt(this.value)) || parseInt(this.value) == 0
+                const valorCampoStockAñadir = this.value
+            })
+            
+            btnLimpiarDatos.addEventListener("click", function() {
+                campoNombre.value = ""
+                campoID.value = ""
+                campoStockActual.value = ""
+                campoStockAñadir.value = ""
+                btnLimpiarDatos.style.display = "none"
+                campoStockAñadir.disabled = true
+            })
+        })
+    </script>
+</body>
+</html>

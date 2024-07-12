@@ -1,0 +1,73 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url("/img/fondo.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.navbar {
+    background-color: #f0f0f0; 
+}
+
+.navbar-brand {
+    color: #333; /* Color del texto del logo */
+}
+
+.navbar-nav .nav-link {
+    color: #333;
+    margin-right: 10px; 
+}
+
+.navbar-nav .nav-link:hover {
+    color: #555; 
+}
+
+.navbar-toggler {
+    border-color: #333;
+}
+
+.carousel {
+    margin-top: 70px; 
+}
+
+.carousel-caption {
+    background-color: rgba(0, 0, 0, 0.5); 
+    color: #fff; /* Color del texto */
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: #333; 
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    color: #fff; 
+}
+
+.container h1 {
+    margin-top: 40px; 
+    text-align: center; 
+}
+
+recuadro {
+    border: 2px dashed #ccc; 
+    height: 150px; 
+    margin-top: 20px; 
+}
+
+footer {
+    margin-top: 20px; 
+    background-color: #f8f9fa; 
+    color: #333;
+    font-size: 14px; 
+    text-align: center; 
+}
+
+footer a {
+    color: #333; 
+}
+
+footer a:hover {
+    text-decoration: none; 
+}

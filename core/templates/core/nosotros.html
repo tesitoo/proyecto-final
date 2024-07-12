@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static "core/css/nosotros.css" %}">   
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url({% static "core/img/fondo.png" %});
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand boton_reversa" href="#"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'nosotros' %}">Nosotros</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'registro' %}">Registrarme</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'ingresar' %}">Ingresar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'admin' %}">Admin</a>
+                    </li>
+                </ul>
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Forja tu búsqueda" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Buscar</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <div class="explicacion-nosotros">
+        <h1>Conócenos</h1>
+        <p>Hace años, dos amigos apasionados por los videojuegos se reunieron en una pequeña habitación con una idea audaz: crear una tienda de videojuegos que fuera más que un simple comercio. Queríamos construir un espacio donde los jugadores pudieran encontrar no solo títulos y consolas, sino también una comunidad vibrante y un lugar para compartir su amor por los juegos.</p>
+        <h1>Nuestras motivaciones</h1>
+        <p>1-Pasión por los Videojuegos: Nuestra pasión por los videojuegos nos impulsa. Desde las consolas clásicas hasta los últimos lanzamientos, vivimos y respiramos este mundo. Queremos transmitir esa emoción a nuestros clientes.</p>
+        <p>2-Experiencia Única: No somos solo una tienda; somos una experiencia. Queremos que cada visita sea especial. Desde la música ambiental hasta las exposiciones de arte inspiradas en videojuegos, creamos un ambiente que te sumerge en el universo gamer.</p>
+        <p>3-Conexión con la Comunidad: Los videojuegos no solo son sobre píxeles y controles. Son sobre personas. Queremos ser el punto de encuentro para jugadores, donde puedan compartir historias, competir y hacer amigos.</p>
+    </div>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card integrante-card">
+                    <img src="{% static "core/img/monckey2.jpg" %}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Daniel Galvez</h5>
+                        <p class="card-text">Estudiante y jugador profesional.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card integrante-card">
+                    <img src="{% static "core/img/monckey2.jpg" %}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Camilo Bravo</h5>
+                        <p class="card-text">Estudiante y jugador profesional.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer id="footer" class="bg-light py-2"style="margin-top: auto;">
+        <div class="container text-center">
+            <div class="footer-content">
+                <p>
+                    <a href="https://wa.link/tql3bb" target="_blank">Contacto</a>
+                </p>
+                <p>© 2023 Forja Videojuegos. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+.cuadro_registro {
+    width: 25rem;
+    height: 58rem;
+    margin: 100px auto;
+    background-color: rgba(0, 0, 0, 0.7); 
+    padding: 20px; 
+    border-radius: 10px; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); 
+    text-align: center; 
+}
+.cuadro_registro .form-control {
+    margin-bottom: 10px; 
+    background-color: rgba(255, 255, 255, 0.2); 
+    color: #fff; 
+    border-color: rgba(255, 255, 255, 0.2); 
+}
+.cuadro_registro .form-control:focus {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #fff; 
+}
+.cuadro_registro .boton_ingresar { margin-top: 10px; }
+.cuadro_registro .boton_ingresar:hover { opacity: 0.8; }

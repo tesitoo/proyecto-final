@@ -1,0 +1,78 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+	.navbar { background-color: #6c757d; }
+	.navbar-brand { color: #fff; font-weight: bold; }
+	.navbar-nav .nav-link { color: #fff; margin-right: 10px; }
+	.navbar-nav .nav-link:hover { color: #f8f9fa; }
+	.navbar-toggler { border-color: #fff; }
+
+	.a-custom.active:hover { color: #E39B00; border-radius: 2px; }
+	.a-custom.nav-link:hover { color: #E39B00; border-radius: 2px; }
+</style>
+<!-- Contenedor de mensajes -->
+<div class="toast-container position-fixed top-0 end-0 p-3" id="toastContainer">
+	{% if messages %}
+		{% for message in messages %}
+			<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+				<div class="toast-header {% if 'success' in message.tags %}bg-success{% elif 'error' in message.tags %}bg-danger{% endif %}">
+					<span>
+						<i class="bi {% if 'success' in message.tags %}bi-check-circle{% elif 'error' in message.tags %}bi-exclamation-circle{% endif %} p-1"></i>
+					</span>
+					<strong class="me-auto">
+						{% if 'success' in message.tags %}
+							¡Éxito!
+						{% elif 'error' in message.tags %}
+							¡Oops! Algo salió mal.
+						{% endif %}
+					</strong>
+				</div>
+				<div class="toast-body">
+					{{ message }}
+				</div>
+			</div>
+		{% endfor %}
+	{% endif %}
+</div>
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+	<div class="container-fluid">
+		<span class="navbar-brand mb-0 h1">
+			ForjaVideojuegos
+		</span>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<div class="d-flex w-100 align-items-center">
+				<!-- Parte izquierda del navbar -->
+				<div class="d-flex flex-column col-9 p-2" id="nav-parte-izq">
+					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+						<li class="nav-item"><a class="a-custom nav-link active" aria-current="page" href="{% url 'index' %}"><i class="bi bi-house-fill"></i> Inicio</a></li>
+						<li class="nav-item"><a class="a-custom nav-link" aria-current="page" href="{% url 'ropa' %}"><i class="bi bi-dice-5-fill"></i> Concurso</a></li>
+						{% if request.session.cuenta_rol == "Administrador" %}
+							<li class="nav-item"><a class="a-custom nav-link" aria-current="page" href="{% url 'panelAdmin' %}"><i class="bi bi-cpu-fill"></i> Admin</a></li>
+						{% endif %}
+						<li class="nav-item"><a class="a-custom nav-link" aria-current="page" href="{% url 'carrito' %}"><i class="bi bi-basket3-fill"></i> Carrito</a></li>
+					</ul>
+				</div>
+				<!-- Parte derecha del navbar -->
+				<div class="d-flex col-3 p-2 justify-content-end align-items-center" id="nav-parte-derecha">
+					<div class="btn-group dropstart">
+						<button class="btn me-md-2 btn-lg" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+							<i class="bi bi-three-dots-vertical"></i></button>
+						</button>
+						<ul class="dropdown-menu">
+							{% if request.session.logeado %}
+								<li><a class="dropdown-item" href="{% url 'miscompras' %}">Mis compras</a></li>
+								<li><a class="dropdown-item" href="{% url 'misdatos' %}">Mis datos</a></li>
+								<li><a class="dropdown-item" href="{% url 'cerrar_sesion' %}">Cerrar sesión</a></li>
+							{% else %}
+								<li><a class="dropdown-item" href="{% url 'ingresar' %}">Iniciar sesión</a></li>
+							{% endif %}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</nav>

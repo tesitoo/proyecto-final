@@ -1,0 +1,18 @@
+#formulario_mis_datos {
+    background-color: rgb(43, 48, 53); 
+    padding: 30px;
+    border-radius: 10px; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+}
+
+#formulario_mis_datos .form-control {
+    margin-bottom: 15px; 
+}
+
+#formulario_mis_datos .form-check-input {
+    margin-top: 5px;
+}
+
+#formulario_mis_datos .btn {
+    margin-right: 10px; 
+}

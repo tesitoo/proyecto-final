@@ -1,0 +1,178 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static "core/css/AdProducto.css"%}"> 
+    <link rel="stylesheet" href="{% static "core/css/style.css"%}"> 
+    <title>Administrar productos</title>
+</head>
+<body>
+
+    {% include "./navbar.html" %}
+    <hr>
+    <div class="productos-container">
+        <h1 class="text-center">Mantenedor de Productos</h1>
+        <form id="datos_producto" method="post" enctype="multipart/form-data" autocomplete="off">
+            {% csrf_token %}
+            <div class="producto-form-group">
+                <label for="id">ID</label>
+                <input type="text" class="producto-form-control" id="id" name="id" disabled>
+            </div>
+            <div class="producto-form-group">
+                <label for="categoria">Categoría</label>
+                <select class="producto-form-control" id="categoria" name="categoria" required> 
+                    <option value="Seleccione categoría" selected disabled>Seleccione categoría</option>
+                    {% for categoria in categorias %}
+                        <option value="{{categoria}}">{{categoria}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="producto-form-group">
+                <label for="nombre">Nombre</label>
+                <input type="text" class="producto-form-control" id="nombre" name="nombre" required>
+            </div>
+            <div class="producto-form-group">
+                <label for="descripcion">Descripción</label>
+                <textarea class="producto-form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
+            </div>
+            <div class="producto-form-group">
+                <label for="precio">Precio</label>
+                <input type="text" class="producto-form-control" id="precio" name="precio" required>
+            </div>
+            <div class="producto-form-group">
+                <label for="desc_suscriptor">% Descuento Suscriptor</label>
+                <input type="text" class="producto-form-control" id="desc_suscriptor" name="desc_suscriptor" required>
+            </div>
+            <div class="producto-form-group">
+                <label for="desc_oferta">% Descuento Oferta</label>
+                <input type="text" class="producto-form-control" id="desc_oferta" name="desc_oferta" required>
+            </div>
+            <div class="producto-form-group">
+                <label for="imagen_producto">Imagen</label>
+                <input type="file" class="form-control producto-form-control-file" id="imagen_producto" name="imagen_producto" accept="image/*">
+            </div>
+            <div class="text-center">
+                <button type="button" class="btn btn-primary mx-2" id="btn-guardar" style="display: none;">Guardar</button>
+                <button type="button" class="btn btn-danger mx-2" id="btn-limpiar" style="display: none;">Limpiar</button>
+                <button type="button" class="btn btn-success mx-2" id="btn-nuevo">Nuevo</button>
+            </div>
+        </form>
+        <br>
+        <h2>Productos Existentes</h2>
+        <table class="productos-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Categoría</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>% Desc. Suscriptor</th>
+                    <th>% Desc. Oferta</th>
+                    <th>Opciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos %}
+                    <tr data-id="{{producto.id}}">
+                        <td class="producto-id">{{producto.id}}</td>
+                        <td class="producto-categoria">{% if producto.categoria %}{{producto.categoria}}{% else %}-{% endif %}</td>
+                        <td class="producto-nombre">{{producto.nombre}}</td>
+                        <td class="producto-descripcion">{{producto.descripcion}}</td>
+                        <td class="producto-precio">${{producto.precio}}</td>
+                        <td class="producto-descuento-subs">{{producto.descuento_subs}}%</td>
+                        <td class="producto-descuento">{{producto.descuento}}%</td>
+                        <td>
+                            <button type="submit" class="btn btn-warning btn-sm btn-editar-prod" data-img="{{producto.imagen.url}}" data-id="{{producto.id}}">Editar</button>
+                            <form method="post" action="{% url 'eliminar_producto' producto.id %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm mt-2">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    {% include "./footer.html" %}
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="{% static "core/js/Vproducto.js"%}"></script>
+    <script type="module">
+		import { getCookie } from "/static/core/js/utilidades.js"
+
+		document.addEventListener("DOMContentLoaded", function() {
+			const botonesEditar = document.querySelectorAll(".btn-editar-prod")
+			const btnLimpiar = document.getElementById("btn-limpiar")
+			const campoFoto = document.getElementById("imagen_producto")
+
+			//Todos los botones de "Editar"
+			botonesEditar.forEach(boton => {
+				boton.addEventListener("click", function() {
+					const idProducto = this.getAttribute("data-id")
+					const nombreProducto = this.closest("tr").querySelector(".producto-nombre").textContent
+					const descripcionProducto = this.closest("tr").querySelector(".producto-descripcion").textContent
+					const precioProducto = this.closest("tr").querySelector(".producto-precio").textContent.replace("$", "")
+					const categoriaProducto = this.closest("tr").querySelector(".producto-categoria").textContent
+					const descuentoProducto = this.closest("tr").querySelector(".producto-descuento").textContent.replace("%", "")
+					const descuentoSubsProducto = this.closest("tr").querySelector(".producto-descuento-subs").textContent.replace("%", "")
+
+					document.querySelector("#id").value = idProducto
+					document.querySelector("#nombre").value = nombreProducto
+					document.querySelector("#descripcion").value = descripcionProducto
+					document.querySelector("#precio").value = parseInt(precioProducto)
+					document.querySelector("#categoria").value = categoriaProducto
+					document.querySelector("#desc_oferta").value = parseFloat(descuentoProducto)
+					document.querySelector("#desc_suscriptor").value = parseFloat(descuentoSubsProducto)
+
+					document.getElementById("btn-guardar").style.display = "inline-block"
+					document.getElementById("btn-limpiar").style.display = "inline-block"
+					document.getElementById("btn-nuevo").style.display = "none"
+
+				})
+			})
+
+			//Botón guardar cambios
+			document.getElementById("btn-guardar").addEventListener("click", function() {
+				var productoId = document.getElementById("id").value
+				var actionUrl = "/editar_producto/" + productoId + "/"
+				document.getElementById("datos_producto").action = actionUrl
+				document.getElementById("datos_producto").submit()
+
+				document.getElementById("btn-guardar").style.display = "none"
+				document.getElementById("btn-limpiar").style.display = "none"
+				document.getElementById("btn-nuevo").style.display = "inline-block"
+			})
+
+			//Botón añadir producto
+			document.getElementById("btn-nuevo").addEventListener("click", function() {
+				document.getElementById("datos_producto").action = "{% url 'adminProductos' %}"
+				document.getElementById("datos_producto").submit()
+			})
+
+			//Botón cancelar edición
+			btnLimpiar.addEventListener("click", function() {
+				const camposFormulario = document.getElementById("datos_producto").getElementsByTagName("input")
+				const textareaFormulario = document.getElementById("datos_producto").getElementsByTagName("textarea")
+				const categoriaProducto = document.getElementById("datos_producto").getElementsByTagName("select")
+				
+				for (let i = 0; i < camposFormulario.length; i++) { camposFormulario[i].value = "" }
+				for (let i = 0; i < textareaFormulario.length; i++) { textareaFormulario[i].value = "" }
+				for (let i = 0; i < categoriaProducto.length; i++) { categoriaProducto[i].value = "" }
+
+				document.getElementById("datos_producto").action = ""
+
+				document.getElementById("btn-guardar").style.display = "none"
+				document.getElementById("btn-limpiar").style.display = "none"
+				document.getElementById("btn-nuevo").style.display = "inline-block"
+			})
+		})
+    </script>
+</body>
+</html>

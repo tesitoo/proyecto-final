@@ -1,0 +1,143 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static "core/css/AdVentas.css"%}">
+    <link rel="stylesheet" href="{% static "core/css/style.css"%}">
+    <title>Administrar ventas</title>
+</head>
+<body>
+    {% include "./navbar.html" %}
+    <hr>
+    <h1 class="text-center">Historial de ventas</h1>
+	<br>
+	<main class="container">
+		<table class="table table-striped mt-3">
+			<thead class="sticky-top">
+				<tr>
+                    <th>Nro. boleta</th>
+                    <th>Fecha</th>
+                    <th>Nombre cliente</th>
+                    <th>Suscripción</th>
+                    <th>Monto total</th>
+                    <th>Estado actual</th>
+                    <th>Acciones</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for boleta in boletas %}
+					<tr>
+						<td>#{{boleta.id}}</td>
+						<td>{{boleta.fecha}}</td>
+						<td>{{boleta.cliente.nombres}} {{boleta.cliente.apellidos}}</td>
+						<td>{% if boleta.cliente.subscrito %}Sí{% else %}No{% endif %}</td>
+						<td>${{boleta.total}}</td>
+						<td id="estado_actual{{boleta.id}}">{{boleta.estado_pedido}}</td>
+						<td>
+							<button type="button" class="btn btn-outline-warning btn-sm" id="detalles{{boleta.id}}"><i class="bi bi-journal-text"></i> Ver detalles</button>
+                            <select class="form-control estado-select mt-2" data-boleta-id="{{ boleta.id }}">
+                                <option value="Anulado" {% if boleta.estado_pedido == "Anulado" %}selected{% endif %}>Anulado</option>
+                                <option value="En proceso" {% if boleta.estado_pedido == "En proceso" %}selected{% endif %}>En proceso</option>
+                                <option value="Vendido" {% if boleta.estado_pedido == "Vendido" %}selected{% endif %}>Vendido</option>
+                                <option value="Despachado" {% if boleta.estado_pedido == "Despachado" %}selected{% endif %}>Despachado</option>
+                                <option value="Entregado" {% if boleta.estado_pedido == "Entregado" %}selected{% endif %}>Entregado</option>
+                            </select>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</main>
+	<hr>
+
+    {% include "./footer.html" %}
+
+	<div class="modal" id="modalDetalleBoleta" tabindex="-1" aria-labelledby="modalDetalleBoleta" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+			<div class="modal-content" id="cajaModalFicha">
+				<div class="modal-header" id="modalDetalleBoletaHeader"></div>
+				<div class="modal-body" id="modalDetalleBoletaBody"></div>
+				<div class="modal-footer justify-content-center" id="modalDetalleBoletaFooter"></div>
+			</div>
+		</div>
+	</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+	<script type="module">
+		import { getCookie } from "/static/core/js/utilidades.js"
+
+		document.addEventListener("DOMContentLoaded", function() {
+			const boletas = JSON.parse(
+				"{{boletas|safe|escapejs}}".replace(/'/g, '"').replace(/ False/g, " false").replace(/ True/g, " true").replace(/ None/g, " null")
+			)
+
+			const modalHeader = document.getElementById("modalDetalleBoletaHeader")
+			const modalBody = document.getElementById("modalDetalleBoletaBody")
+			const modalFooter = document.getElementById("modalDetalleBoletaFooter")
+
+			boletas.forEach(boleta => {
+				const botonDetalles = document.getElementById(`detalles${boleta.id}`)
+				const productosHTML = boleta.productos.map(producto => `
+					<div class="productoEnBoleta">
+						<img src="${producto.imagen}" alt="${producto.nombre}" style="width: 70px; height: 70px;">
+						<span>(<b class="text-success-emphasis">x${producto.cantidad}</b>) ${producto.nombre}</span>
+					</div>
+				`).join("")
+				botonDetalles.addEventListener("click", function() {
+					if (!modalDetalleBoleta.classList.contains("show")) {
+						var modalInstance = new bootstrap.Modal(modalDetalleBoleta)
+						modalHeader.textContent = `Boleta #${boleta.id} | Emitida el ${boleta.fecha}`
+						modalBody.innerHTML = `
+							<table id="tablaDatosBoleta" class="table">
+								<thead>
+									<tr>
+										<th>Productos comprados</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>${productosHTML}</td>
+									</tr>
+								</tbody>
+							</table>
+						`
+						modalFooter.innerHTML = `
+							<button class="btn btn-outline-danger" data-bs-dismiss="modal">Cerrar panel</button>
+						`
+						modalInstance.show()
+					}
+				})
+			});
+
+            //Cambiar estado del pedido.
+			const selectEstadoPedido = document.querySelectorAll(".estado-select")
+
+			selectEstadoPedido.forEach(select => {
+				select.addEventListener("change", function() {
+					const boletaID = this.getAttribute("data-boleta-id")
+					const nuevoEstado = this.value
+	
+					fetch(`/actualizar_estado_boleta/${boletaID}/${nuevoEstado}/`, {
+						method: "POST",
+						headers: {
+							"X-CSRFToken": getCookie("csrftoken", document),
+							"Content-Type": "application/json"
+						},
+					})
+					.then(respuesta => respuesta.json())
+					.then(data => { 
+                        console.log(data)
+                        document.querySelector(`#estado_actual${boletaID}`).textContent = data.nuevo_estado })
+					.catch(error => { console.error("Error al enviar la solicitud:", error) })
+				})
+			})
+		})
+	</script>
+</body>
+</html>
