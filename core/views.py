@@ -90,10 +90,10 @@ def actualizar_cuenta(request):
 		repetir_contraseña = request.POST["campo_repetir_contraseña"]
 		if contraseña != repetir_contraseña:
 			messages.error(request, "Las contraseñas no coinciden.")
-			return redirect("mis_datos")
+			return redirect("misdatos")
 		elif not check_password(contraseña, cuenta.contraseña):
 			messages.error(request, "Contraseña incorrecta.")
-			return redirect("mis_datos")
+			return redirect("misdatos")
 		cuenta.nombres = request.POST["campo_nombres"]
 		cuenta.apellidos = request.POST["campo_apellidos"]
 		cuenta.direccion = request.POST["campo_direccion"]
